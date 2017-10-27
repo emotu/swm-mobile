@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleDisplayName</key>
+	<string>SWM</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>localhost</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>PUMAU will like to access your camera</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>PUMAU will like to access your microphone</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>PUMAU will like to store images in your photo library</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>PUMAU will like to access your photo library</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Karla-Bold.ttf</string>
+		<string>Karla-BoldItalic.ttf</string>
+		<string>Karla-Italic.ttf</string>
+		<string>Karla-Regular.ttf</string>
+		<string>Poppins_Bold.ttf</string>
+		<string>Poppins_Light.ttf</string>
+		<string>Poppins_Medium.ttf</string>
+		<string>Poppins_Regular.ttf</string>
+		<string>Poppins_SemiBold.ttf</string>
+		<string>Poppins-Bold.ttf</string>
+		<string>Poppins-Light.ttf</string>
+		<string>Poppins-Medium.ttf</string>
+		<string>Poppins-Regular.ttf</string>
+		<string>Poppins-SemiBold.ttf</string>
+		<string>qanelas_bold.ttf</string>
+		<string>qanelas_extrabold.ttf</string>
+		<string>qanelas_medium.ttf</string>
+		<string>qanelas_thin.ttf</string>
+		<string>Qanelas-Bold.ttf</string>
+		<string>Qanelas-ExtraBold.ttf</string>
+		<string>Qanelas-Medium.ttf</string>
+		<string>Qanelas-Thin.ttf</string>
+		<string>Karla_Bold.ttf</string>
+		<string>Karla_BoldItalic.ttf</string>
+		<string>Karla_Italic.ttf</string>
+		<string>Karla_Regular.ttf</string>
+		<string>poppins_bold.ttf</string>
+		<string>karla_bold.ttf</string>
+		<string>karla_italic.ttf</string>
+		<string>karla_regular.ttf</string>
+		<string>poppins_light.ttf</string>
+		<string>poppins_medium.ttf</string>
+		<string>poppins_regular.ttf</string>
+		<string>poppins_semi_bold.ttf</string>
+		<string>Entypo.ttf</string>
+		<string>EvilIcons.ttf</string>
+		<string>Feather.ttf</string>
+		<string>FontAwesome.ttf</string>
+		<string>Foundation.ttf</string>
+		<string>Ionicons.ttf</string>
+		<string>MaterialCommunityIcons.ttf</string>
+		<string>MaterialIcons.ttf</string>
+		<string>Octicons.ttf</string>
+		<string>SimpleLineIcons.ttf</string>
+		<string>Zocial.ttf</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>location</string>
+		<string>remote-notification</string>
+	</array>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>armv7</string>
+	</array>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>PUMAU will like to access your current location information</string>
+	<key>NSLocationUsageDescription</key>
+	<string>PUMAU requires your location information</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>PUMAU will like to access your current location</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>PUMAU requires your location information</string>
+</dict>
+</plist>
