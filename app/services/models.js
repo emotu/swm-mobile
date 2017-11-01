@@ -23,6 +23,7 @@ export class Country extends ResourceFactory.createResource('countries') {}
 export class State extends ResourceFactory.createResource('states') {}
 export class City extends ResourceFactory.createResource('cities') {}
 export class Street extends ResourceFactory.createResource('streets') {}
+export class District extends ResourceFactory.createResource('districts') {}
 
 export class Bill extends ResourceFactory.createResource('bills') {}
 export class Payment extends ResourceFactory.createResource('payments') {}
@@ -36,3 +37,5 @@ export class PropertyBill extends ResourceFactory.createResource('property-bills
 export class PreviousPropertyBill extends ResourceFactory.createResource('previous-property-bills') {}
 export class PropertyType extends ResourceFactory.createResource('property-types') {}
 export class PropertyStatus extends ResourceFactory.createResource('property-statuses') {}
+
+export class RegisterProperty extends ResourceFactory.createResource('register-property') {}

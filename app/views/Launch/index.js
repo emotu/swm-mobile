@@ -12,9 +12,11 @@ import * as PageActions from './modules/actions';
 import { connect } from 'react-redux';
 import styles from './styles';
 
+import constants from 'app/config/constants';
+import generalStyles from 'app/config/styles';
+
 import Login from 'app/views/Login';
 import Index from 'app/views/Index';
-import Loading from 'app/components/Loading';
 
 
 class Page extends Component {
@@ -41,7 +43,10 @@ class Page extends Component {
 
         if(!props.isLoaded) {
             return (
-                <Loading />
+                <View style={[generalStyles.loadingContainer, {backgroundColor: constants.baseColor}]}>
+                    <ActivityIndicator animating={true} size={'large'} color={constants.whiteColor} />
+                    <Text style={[generalStyles.loadingText, {color: constants.whiteColor}]}>LOADING</Text>
+                </View>
             )
         }
 

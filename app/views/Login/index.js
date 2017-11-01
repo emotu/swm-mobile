@@ -7,6 +7,7 @@ import {
     View,
     Dimensions,
     TouchableHighlight,
+    ActivityIndicator,
 
 } from 'react-native';
 
@@ -14,9 +15,9 @@ import {
 import * as PageActions from './modules/actions';
 import { connect } from 'react-redux';
 import styles from './styles';
+import generalStyles from 'app/config/styles';
 
-import Loading from 'app/components/Loading';
-
+import { fetchErrors, hasErrors } from 'app/utils/errors';
 
 class Page extends Component {
     constructor(props) {
@@ -59,11 +60,9 @@ class Page extends Component {
     }
 
     handleInputChanged(key, value) {
-        console.log(key, "====>", value)
         let data = Object.assign({}, this.state.data, {[key]: value })
 
         this.setState({ data })
-
     }
 
     componentDidMount() {
@@ -73,7 +72,6 @@ class Page extends Component {
     componentWillReceiveProps(nextProps) {
         if(nextProps.saveSuccessful) {
             if(this.props.onLoginSuccessful) {
-                console.log('about to trigger the successful save feature')
                 // Trigger the parent window to attempt the reload again
                 this.props.onLoginSuccessful()
             }
@@ -85,7 +83,10 @@ class Page extends Component {
 
         if(!props.isLoaded) {
             return (
-                <Loading />
+                <View style={generalStyles.loadingContainer}>
+                    <ActivityIndicator animating={true} size={'large'} color={constants.baseColor} />
+                    <Text style={generalStyles.loadingText}>LOADING</Text>
+                </View>
             )
         }
 

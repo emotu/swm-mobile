@@ -35,7 +35,7 @@ export async function logoutUser(purge = false) {
 export async function getAuthHeaders() {
 
     let __xcred = await AsyncStorage.getItem('__xcred');
-
+    
     if(__xcred) {
         return {
             'X-Request-With': 'XMLHttpRequest',

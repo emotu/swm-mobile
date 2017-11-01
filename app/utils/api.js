@@ -34,9 +34,11 @@ class ResourceFactory extends Object {
                 let config = {method, url};
                 let key = method.toLowerCase() == 'get' ? 'params' : 'data';
                 config[key] = data;
-                config['headers'] = Auth.getAuthHeaders();
 
-                return this.axios.request(config);
+                return Auth.getAuthHeaders().then((headers) => {
+                    config['headers'] = headers
+                    return this.axios.request(config);
+                });
             }
 
             static executeUploadRequest(file, data = {}, pattern='', name = 'file', method = 'POST') {
@@ -44,16 +46,18 @@ class ResourceFactory extends Object {
                 let url = this.buildURL(pattern, data);
                 let config = {method, url};
 
-                let headers = Auth.getAuthHeaders();
-                headers['content-type'] = 'multipart/form-data';
-                config['headers'] = headers;
+                return Auth.getAuthHeaders().then((headers) => {
+                    headers['content-type'] = 'multipart/form-data';
+                    config['headers'] = headers
 
-                const formData = new FormData();
-                formData.append(name, file);
+                    const formData = new FormData();
+                    formData.append(name, file);
 
-                config['data'] = formData;
+                    config['data'] = formData;
 
-                return this.axios.request(config);
+                    return this.axios.request(config);
+
+                });
             }
 
             // Now implement all default methods

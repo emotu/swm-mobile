@@ -7,9 +7,14 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: constants.whiteColor,
         flex: 1,
-        justifyContent: 'flex-start',
+        justifyContent: 'center',
         alignItems: 'center',
     },
+    mainHeadline: {
+        fontFamily: constants.headerFontFamily,
+        fontWeight: "900",
+        letterSpacing: -1
+    }
 
 })
 
