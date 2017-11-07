@@ -34,3 +34,24 @@ export function form(data = {}) {
         })
     };
 }
+
+export function logout(data = {}) {
+    return function(dispatch) {
+        if(data && data.reloading) {
+            dispatch(generateAction(ActionTypes.LAUNCH_RELOADING, {}));
+        } else {
+            dispatch(generateAction(ActionTypes.LAUNCH_LOADING, {}));
+        }
+
+        console.log(' I am triggering logout now')
+
+        Auth.logoutUser().then((res) => {
+            let isLoggedIn = false
+            let data = { isLoggedIn }
+            dispatch(generateAction(ActionTypes.LAUNCH_FORM_SUCCESSFUL, { data } ));
+
+        }).catch((err) => {
+
+        })
+    }
+}

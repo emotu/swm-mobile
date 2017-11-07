@@ -1,5 +1,5 @@
 const settings = {
-    baseURL: 'https://admin.pay5.com.ng/api/v1',
+    baseURL: 'https://agent.pumau.cloud/api/v1',
     appName: "PUMAU"
 };
 

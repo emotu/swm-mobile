@@ -111,17 +111,6 @@ class Page extends Component {
 
     componentDidMount() {
         this.loadData();
-        // Loading position now.
-        navigator.geolocation.getCurrentPosition((position) => {
-            let { coords = {} } = position;
-            let data = Object.assign({}, this.state.data, coords);
-            console.log("When i got the coordinates, this is what the data is", coords);
-            this.setState( { data })
-
-
-        }, (error) => {
-            console.log('this error occured =====>', error)
-        })
     }
 
     restartForm() {
@@ -130,6 +119,11 @@ class Page extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
+
+        if(nextProps && nextProps.dependencies && nextProps.dependencies.obj) {
+            this.setState( { data: nextProps.dependencies.obj });
+        }
+
         if(nextProps && nextProps.saveSuccessful && nextProps.data && !nextProps.uploadSuccessful) {
             console.log('saveSuccessful', nextProps, this.state);
             let data = nextProps.data;
@@ -180,9 +174,8 @@ class Page extends Component {
 
         let props = this.props;
         let successCheckboxSize = PixelRatio.getPixelSizeForLayoutSize(constants.menuIconSize*10);
-        let navigation = props.navigation;
 
-        if(!props.isLoaded || !props.dependencies || !props.dependencies.task) {
+        if(!props.isLoaded || !props.dependencies || !props.dependencies.obj) {
             return (
                 <View style={generalStyles.loadingContainer}>
                     <ActivityIndicator animating={true} size={'large'} color={constants.baseColor} />
@@ -204,7 +197,7 @@ class Page extends Component {
             return (
                 <View style={[generalStyles.loadingContainer, {paddingHorizontal: 10, paddingVertical: 10}]}>
                     <Feather name="check" size={successCheckboxSize} color={constants.baseColor} />
-                    <TouchableOpacity style={[styles.actionButtonArea, {marginTop: 4}]} onPress={() => { navigation.goBack(); }}>
+                    <TouchableOpacity style={[styles.actionButtonArea, {marginTop: 4}]} onPress={this.restartForm}>
                         <Text style={styles.actionButton}>{"SUBMIT ANOTHER ENTRY"}</Text>
                     </TouchableOpacity>
                 </View>
@@ -221,8 +214,9 @@ class Page extends Component {
         let basicColor = constants.lightColor;
         let plusColor = constants.baseColor
 
-        let task = props.dependencies.task;
-        let street = props.dependencies.street;
+        let obj = props.dependencies.obj;
+        let street = obj.street || {name: ""};
+        let city = obj.city || {name: ""};
 
         let cameraText = this.state.images.length > 0 ? `${this.state.images.length} Image(s)` : "Attach Image";
         let tagText = data.tag_code || "Add Tag";
@@ -303,7 +297,7 @@ class Page extends Component {
                             <View style={generalStyles.dataFormSection}>
                                 {/* <Text style={generalStyles.dataFormLabel}>{"first name".toUpperCase()}</Text> */}
                                 <Text style={generalStyles.unEditableText}>
-                                    {`${street.name.toUpperCase()}, ${street.city.name.toUpperCase()}`}
+                                    {`${street.name.toUpperCase()}, ${city.name.toUpperCase()}`}
                                 </Text>
                             </View>
 
@@ -324,7 +318,7 @@ class Page extends Component {
                                          keyboardType={'default'}
                                          underlineColorAndroid={'transparent'}
                                          onChangeText={(value) => this.handleInputChanged('apt', value)}/>
-                                     <TextInput autoFocus={false} autoCapitalize={'words'} autoCorrect={false} value={data.property_size}
+                                     <TextInput autoFocus={false} autoCapitalize={'words'} autoCorrect={false} value={data.property_size ? data.property_size.toString() : ""}
                                           placeholderTextColor={constants.dataInputPlaceholderTextColor} selectionColor={constants.baseColor}
                                           style={[generalStyles.dataInputField, {textAlign: 'right'}, hasErrors(props.errors, 'property_size') && generalStyles.errorInput]}
                                           placeholder={'Size'} returnKeyType={'next'}
@@ -416,7 +410,7 @@ class Page extends Component {
 
 
 function mapStateToProps(state) {
-    return state.tasks;
+    return state.submissions;
 }
 
 const mapDispatchToProps = {

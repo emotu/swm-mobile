@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
         letterSpacing: -1,
         textAlign: 'center',
         alignSelf: 'center',
-        fontSize: PixelRatio.getPixelSizeForLayoutSize(10),
+        fontSize: PixelRatio.getPixelSizeForLayoutSize(9),
         color: color(constants.whiteColor).darken(0.03).hex(),
     },
     headerView: {
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
         letterSpacing: -1,
         alignItems: 'flex-start',
         fontWeight: 'bold',
-        fontSize: PixelRatio.getPixelSizeForLayoutSize(10),
+        fontSize: PixelRatio.getPixelSizeForLayoutSize(9),
     },
     headerCancel: {
         flex: 1,
@@ -51,6 +51,11 @@ const styles = StyleSheet.create({
         textAlign: 'right',
         color: constants.whiteColor,
         fontWeight: 'bold',
+    },
+    errorText: {
+        color: 'red',
+        fontFamily: constants.fontFamily,
+        fontSize: PixelRatio.getPixelSizeForLayoutSize(constants.labelFontSize),
     },
     loadingContainer: {
         flex: 1,
@@ -66,8 +71,8 @@ const styles = StyleSheet.create({
         marginTop: PixelRatio.getPixelSizeForLayoutSize(1),
     },
     navigationButton: {
-        paddingLeft: PixelRatio.getPixelSizeForLayoutSize(5),
-        paddingRight: PixelRatio.getPixelSizeForLayoutSize(5),
+        paddingHorizontal: PixelRatio.getPixelSizeForLayoutSize(8),
+        paddingVertical: PixelRatio.getPixelSizeForLayoutSize(8),
     },
     emptyPageContainer: {
         backgroundColor: constants.gridColor,

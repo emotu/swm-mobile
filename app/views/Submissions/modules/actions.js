@@ -1,7 +1,7 @@
 // import Api from 'utils/api';
-// import axios from 'axios';
+import axios from 'axios';
 import { generateActionTypes, generateAction } from 'app/utils/generators';
-import { TaskEntry } from 'app/services/models';
+import { PropertyStatus, PropertyType, VerificationStatus, Street, RegisterProperty, Property } from 'app/services/models';
 import * as Auth from 'app/utils/auth';
 
 export const ActionTypes = generateActionTypes(
@@ -12,6 +12,7 @@ export const ActionTypes = generateActionTypes(
         'FORM',
         'DETAIL',
         'SAVE',
+        'UPLOAD',
     ]
 );
 
@@ -24,7 +25,7 @@ export function detail(data = {}) {
             dispatch(generateAction(ActionTypes.SUBMISSION_LOADING, {}));
         }
 
-        return TaskEntry.get(data).then(response => {
+        return Property.get(data).then(response => {
             dispatch(generateAction(ActionTypes.SUBMISSION_DETAIL_SUCCESSFUL, response.data));
 
         }).catch(error => {
@@ -43,7 +44,7 @@ export function list(data = {}) {
             dispatch(generateAction(ActionTypes.SUBMISSION_LOADING, {}));
         }
 
-        return TaskEntry.list(data).then(response => {
+        return Property.list(data).then(response => {
             dispatch(generateAction(ActionTypes.SUBMISSION_LIST_SUCCESSFUL, response.data));
 
         }).catch(error => {
@@ -61,7 +62,7 @@ export function save(data = {}) {
             dispatch(generateAction(ActionTypes.SUBMISSION_LOADING, {}));
         }
 
-        return TaskEntry.save(data).then(response => {
+        return Property.save(data).then(response => {
             dispatch(generateAction(ActionTypes.SUBMISSION_SAVE_SUCCESSFUL, response.data));
         }).catch(error => {
             console.log(error)
@@ -79,6 +80,51 @@ export function form(data = {}) {
             dispatch(generateAction(ActionTypes.SUBMISSION_LOADING, {}));
         }
 
-        dispatch(generateAction(ActionTypes.SUBMISSION_FORM_SUCCESSFUL, {}));
+        let { id } = data;
+
+        axios.all([
+
+            Property.get({ id }),
+
+            PropertyStatus.list({from_cache: true, page_by: JSON.stringify({ per_page: 1000 }),
+                sort_by: JSON.stringify({ asc_desc:'desc', order_by: 'name' }), }),
+
+            PropertyType.list({from_cache: true, page_by: JSON.stringify({ per_page: 1000 }),
+                sort_by: JSON.stringify({ asc_desc:'desc', order_by: 'name' }), }),
+
+        ]).then(axios.spread((obj, property_statuses, property_types) => {
+            let dependencies = {
+                obj: obj.data,
+                property_statuses: property_statuses.data.results,
+                property_types: property_types.data.results,
+            }
+            let payload = {
+                data,
+                dependencies
+            }
+            dispatch(generateAction(ActionTypes.SUBMISSION_FORM_SUCCESSFUL, payload));
+        })).catch(error => {
+            console.log(error);
+            dispatch(generateAction(ActionTypes.SUBMISSION_FORM_FAILED, error.response.data));
+        })
+
+    };
+}
+
+export function upload(data = {}, file) {
+    return function(dispatch) {
+        if(data.reloading) {
+            dispatch(generateAction(ActionTypes.SUBMISSION_RELOADING, {}));
+        } else {
+            dispatch(generateAction(ActionTypes.SUBMISSION_LOADING, {}));
+        }
+        data.path = 'upload_image';
+
+        return Property.uploadFile(data, file).then(response => {
+            dispatch(generateAction(ActionTypes.SUBMISSION_UPLOAD_SUCCESSFUL, response.data));
+
+        }).catch(error => {
+            dispatch(generateAction(ActionTypes.SUBMISSION_UPLOAD_FAILED, error.response.data));
+        });
     };
 }

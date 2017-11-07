@@ -14,7 +14,7 @@ import { StackNavigator, TabNavigator, TabBarTop } from 'react-navigation';
 
 import Home from 'app/views/Home';
 import Tasks, { Detail as TaskDetail, Form as TaskForm, } from 'app/views/Tasks';
-import Submissions from 'app/views/Submissions';
+import Submissions, { Detail as PropertyDetail, Form as PropertyForm } from 'app/views/Submissions';
 
 import styles from './styles';
 import settings from 'app/config/settings';
@@ -27,10 +27,10 @@ import Feather from 'react-native-vector-icons/Feather';
 
 
 const BaseNavigator = TabNavigator({
-    Tasks: {
-        screen: Tasks,
+    Overview: {
+        screen: TaskDetail,
     },
-    Submissions: {
+    Submission: {
         screen: Submissions,
     },
 }, {
@@ -71,42 +71,10 @@ const BaseNavigator = TabNavigator({
 const RootNavigator = StackNavigator({
 
     Index: {
-        screen: BaseNavigator,
-        navigationOptions: ({ navigation }) => {
-
-            let iconSize = PixelRatio.getPixelSizeForLayoutSize(constants.menuIconSize);
-            let basicColor = constants.whiteColor;
-
-
-            return {
-                title: (<Text style={generalStyles.mainHeadline}>{settings.appName}</Text>),
-                headerLeft: (
-                    <TouchableOpacity style={generalStyles.navigationButton}
-                        onPress={() => {navigation.navigate('DrawerOpen'); }}>
-                        <Entypo name="menu" size={iconSize} color={basicColor} />
-                    </TouchableOpacity>
-                ),
-                // headerRight: (
-                //     <TouchableOpacity style={generalStyles.navigationButton}>
-                //         <Entypo name="plus" size={iconSize} color={basicColor} />
-                //     </TouchableOpacity>
-                // ),
-                headerStyle: {
-                    backgroundColor: constants.baseColor,
-                    borderBottomColor: constants.baseColor,
-                    elevation: 2,
-                    borderBottomWidth: 0.5,
-                },
-                titleStyle: {
-                    textAlign: 'center',
-                    alignSelf: 'center',
-                }
-
-            }
-        }
+        screen: Tasks,
     },
     TaskDetail: {
-        screen: TaskDetail,
+        screen: BaseNavigator,
         navigationOptions: ({ navigation }) => {
             const iconSize = PixelRatio.getPixelSizeForLayoutSize(constants.menuIconSize);
             const basicColor = constants.whiteColor;
@@ -145,6 +113,72 @@ const RootNavigator = StackNavigator({
 
             return {
                 title: (<Text style={generalStyles.mainHeadline}>{"NEW PROPERTY"}</Text>),
+                headerLeft: (
+                    <TouchableOpacity style={generalStyles.navigationButton}
+                        onPress={() => { navigation.goBack(); }}>
+                        <Feather name="arrow-left" size={iconSize} color={basicColor} />
+                    </TouchableOpacity>
+                ),
+                headerRight: (
+                    <TouchableOpacity style={generalStyles.navigationButton}
+                        onPress={() => { navigation.goBack(); }}>
+                        <Feather name="x" size={iconSize} color={basicColor} />
+                    </TouchableOpacity>
+                ),
+                headerStyle: {
+                    backgroundColor: constants.baseColor,
+                    borderBottomColor: constants.baseColor,
+                    elevation: 2,
+                    borderBottomWidth: 0.5,
+                },
+                titleStyle: {
+                    textAlign: 'center',
+                    alignSelf: 'center',
+                    color: constants.whiteColor,
+                }
+            }
+        }
+    },
+    PropertyDetail: {
+        screen: PropertyDetail,
+        navigationOptions: ({ navigation }) => {
+            const iconSize = PixelRatio.getPixelSizeForLayoutSize(constants.menuIconSize);
+            const basicColor = constants.whiteColor;
+            const params = navigation.state.params || {};
+            const name = params.name || "..."
+
+            return {
+                title: (<Text style={generalStyles.mainHeadline}>{name.toUpperCase()}</Text>),
+                headerLeft: (
+                    <TouchableOpacity style={generalStyles.navigationButton}
+                        onPress={() => { navigation.goBack(); }}>
+                        <Feather name="arrow-left" size={iconSize} color={basicColor} />
+                    </TouchableOpacity>
+                ),
+                headerStyle: {
+                    backgroundColor: constants.baseColor,
+                    borderBottomColor: constants.baseColor,
+                    elevation: 2,
+                    borderBottomWidth: 0.5,
+                },
+                titleStyle: {
+                    textAlign: 'center',
+                    alignSelf: 'center',
+                    color: constants.whiteColor,
+                }
+            }
+        }
+    },
+    PropertyForm: {
+        screen: PropertyForm,
+        navigationOptions: ({ navigation }) => {
+            const iconSize = PixelRatio.getPixelSizeForLayoutSize(constants.menuIconSize);
+            const basicColor = constants.whiteColor;
+            const params = navigation.state.params || {};
+            const name = params.name || "..."
+
+            return {
+                title: (<Text style={generalStyles.mainHeadline}>{name.toUpperCase()}</Text>),
                 headerLeft: (
                     <TouchableOpacity style={generalStyles.navigationButton}
                         onPress={() => { navigation.goBack(); }}>

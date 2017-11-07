@@ -4,6 +4,9 @@ export class Task extends ResourceFactory.createResource('tasks') {}
 export class TaskEntry extends ResourceFactory.createResource('task-entries') {}
 export class TaskActivity extends ResourceFactory.createResource('task-activities') {}
 
+export class QueuedTask extends ResourceFactory.createResource('queued-tasks') {}
+export class QueuedTaskEntry extends ResourceFactory.createResource('queued-task-entries') {}
+
 export class EnumeratedStreet extends ResourceFactory.createResource('enumerated-streets') {}
 export class ActiveAgent extends ResourceFactory.createResource('active-agents') {}
 

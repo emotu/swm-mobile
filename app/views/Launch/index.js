@@ -18,6 +18,8 @@ import generalStyles from 'app/config/styles';
 import Login from 'app/views/Login';
 import Index from 'app/views/Index';
 
+import * as Auth from 'app/utils/auth';
+
 
 class Page extends Component {
     constructor(props) {
@@ -54,7 +56,7 @@ class Page extends Component {
         let PageComponent = data.isLoggedIn ? Index : Login
 
         return (
-            <PageComponent onLoginSuccessful={props.formAction} />
+            <PageComponent onLoginSuccessful={props.formAction} onLogoutRequested={this.doLogout} />
         )
     }
 }

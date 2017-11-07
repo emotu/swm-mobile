@@ -18,11 +18,13 @@ export const ActionTypes = generateActionTypes(
 
 export function save(data = {}) {
     return function(dispatch) {
-        if(data.reloading) {
+        if(!data || data.reloading) {
             dispatch(generateAction(ActionTypes.LOGIN_RELOADING, {}));
         } else {
             dispatch(generateAction(ActionTypes.LOGIN_LOADING, {}));
         }
+
+        console.log("this is the data", data)
 
         return Login.save(data).then(response => {
             if(response.status == 201 || response.status == 200) {
@@ -35,6 +37,7 @@ export function save(data = {}) {
 
         }).catch(error => {
             console.log(error)
+            console.log(error.response);
             dispatch(generateAction(ActionTypes.LOGIN_SAVE_FAILED, error.response.data));
         });
     };

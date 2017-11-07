@@ -61,10 +61,9 @@ class Page extends Component {
         if(props.obj && props.obj.pk) {
 
             const pageAction = NavigationActions.navigate({
-                routeName: 'TaskForm',
+                routeName: 'PropertyForm',
                 params: {
-                    task_id: props.obj.pk,
-                    street_id: props.obj.street_id,
+                    id: props.obj.pk,
                 },
             })
 
@@ -101,14 +100,20 @@ class Page extends Component {
                     <View style={styles.detailDataContainer}>
                         <View style={styles.detailData}>
                             {/* Show key, value, and icon to drill in */}
-                            <Text style={styles.propKey}>TASK ID</Text>
-                            <Text style={styles.propValue}>{obj.pk}</Text>
+                            <Text style={styles.propKey}>CODE</Text>
+                            <Text style={styles.propValue}>{obj.code}</Text>
                             <View style={styles.iconSpace}></View>
                         </View>
                         <View style={styles.detailData}>
                             {/* Show key, value, and icon to drill in */}
                             <Text style={styles.propKey}>STATUS</Text>
-                            <Text style={styles.propValue}>{obj.task_status.name.toUpperCase()}</Text>
+                            <Text style={styles.propValue}>{obj.verification_status.name.toUpperCase()}</Text>
+                            <View style={styles.iconSpace}></View>
+                        </View>
+                        <View style={styles.detailData}>
+                            {/* Show key, value, and icon to drill in */}
+                            <Text style={styles.propKey}>NAME</Text>
+                            <Text style={styles.propValue}>{obj.name}</Text>
                             <View style={styles.iconSpace}></View>
                         </View>
                         <View style={styles.detailData}>
@@ -117,18 +122,17 @@ class Page extends Component {
                             <Text style={styles.propValue}>{formatDate(obj.date_created).toUpperCase()}</Text>
                             <View style={styles.iconSpace}></View>
                         </View>
-                        <TouchableOpacity style={styles.detailData}>
-                            {/* Show key, value, and icon to drill in */}
+                        {/* <TouchableOpacity style={styles.detailData}>
                             <Text style={styles.propKey}>SUBMISSIONS</Text>
                             <Text style={styles.propValue}>{formatNumber(obj.submission_count).toUpperCase()}</Text>
-                            <View style={styles.iconSpace}></View>
-                        </TouchableOpacity>
+                            <View style={styles.iconSpace}><Entypo name="chevron-small-right" size={iconSize} color={basicColor} /></View>
+                        </TouchableOpacity> */}
                     </View>
-                    <Text style={styles.commentaryBox}>To submit a property under this task, click on the action button below</Text>
+                    <Text style={styles.commentaryBox}>To update this information, click on the action button below</Text>
                     <Text style={styles.commentaryBox}><Feather name="arrow-down" size={plusIconSize} color={basicColor} /></Text>
                 </ScrollView>
                 <TouchableOpacity style={styles.actionButtonArea} onPress={this.submitProperty}>
-                    <Text style={styles.actionButton}>{"SUBMIT NEW PROPERTY"}</Text>
+                    <Text style={styles.actionButton}>{"UPDATE PROPERTY"}</Text>
                     <Feather name="arrow-right" size={plusIconSize} color={plusColor} />
                 </TouchableOpacity>
             </View>
@@ -138,7 +142,7 @@ class Page extends Component {
 
 
 function mapStateToProps(state) {
-    return state.tasks;
+    return state.submissions;
 }
 
 const mapDispatchToProps = {

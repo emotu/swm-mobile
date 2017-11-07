@@ -23,6 +23,8 @@ import generalStyles from 'app/config/styles';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Entypo from 'react-native-vector-icons/Entypo';
+import Feather from 'react-native-vector-icons/Feather';
+import store from 'app/config/store';
 
 
 class TaskItem extends React.PureComponent {
@@ -66,18 +68,57 @@ class Page extends Component {
 
         this.renderItem = this.renderItem.bind(this);
         this.navigateToTask = this.navigateToTask.bind(this);
+        this.loadData = this.loadData.bind(this);
     }
     /**
      * [navigationOptions description]
      * Standard react-navigation navigation options for this tab. It will be rendered as a tab.
      * @type {Object}
      */
+    // static navigationOptions = (props) => {
+    //     return {
+    //         tabBarLabel: "Tasks",
+    //         tabBarIcon: null,
+    //         tabBarOnPress: (scene, jumpToIndex) => { jumpToIndex(scene.index); }
+    //     }
+    // }
+
     static navigationOptions = (props) => {
+
+        let iconSize = PixelRatio.getPixelSizeForLayoutSize(constants.menuIconSize-2);
+        let basicColor = constants.whiteColor;
+        let navigation = props.navigation;
+
         return {
-            tabBarLabel: "Tasks",
-            tabBarIcon: null,
-            tabBarOnPress: (scene, jumpToIndex) => { jumpToIndex(scene.index); }
+            title: (<Text style={generalStyles.mainHeadline}>{"ASSIGNED TASKS"}</Text>),
+            headerLeft: (
+                <TouchableOpacity style={generalStyles.navigationButton}
+                    onPress={() => {navigation.navigate('DrawerOpen'); }}>
+                    <Feather name="menu" size={iconSize} color={basicColor} />
+                </TouchableOpacity>
+            ),
+            headerRight: (
+                <TouchableOpacity style={generalStyles.navigationButton} onPress={() => {
+                    console.log('I just got pressed'); console.log(PageActions); store.dispatch(PageActions.list({})) }}>
+                    <Feather name="refresh-cw" size={iconSize} color={basicColor} />
+                </TouchableOpacity>
+            ),
+            headerStyle: {
+                backgroundColor: constants.baseColor,
+                borderBottomColor: constants.baseColor,
+                elevation: 2,
+                borderBottomWidth: 0.5,
+            },
+            titleStyle: {
+                textAlign: 'center',
+                alignSelf: 'center',
+            }
+
         }
+    }
+
+    loadData(data = {}) {
+        this.props.loadData(data);
     }
 
     componentDidMount() {

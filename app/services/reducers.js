@@ -4,8 +4,11 @@ export const defaultState = {
     isButtonLoaded: false,
     isReloaded: false,
     isFormLoaded: false,
+    isUploadCompleted: false,
     saveSuccessful: false,
+    saveFailed: false,
     actionSuccessful: false,
+    uploadSuccessful: false,
     results: [],
     page_by: {},
     filter_by: {},
@@ -18,20 +21,26 @@ export const defaultState = {
 
 export function showLoading(state, action = {}) {
     /* Function to handle loading page or activities */
-    return ({...state, ...{saveSuccessful: false, actionSuccessful: false, action: action,
-        isLoaded: false, isReloaded: false, isFormLoaded: false}});
+    return ({...state, ...{saveSuccessful: false, actionSuccessful: false, saveFailed: false, action: action,
+        isLoaded: false, isReloaded: false, isFormLoaded: false, uploadSuccessful: false}});
 }
 
 export function showReloading(state, action = {}) {
     /* Function to handle loading page or activities */
-    return ({...state, ...{saveSuccessful: false, actionSuccessful: false, action: action,
-        isLoaded: true, isReloaded: false, isFormLoaded: true}});
+    return ({...state, ...{saveSuccessful: false, actionSuccessful: false, saveFailed: false, action: action,
+        isLoaded: true, isReloaded: false, isFormLoaded: true, uploadSuccessful: false}});
 }
 
 export function showFormLoading(state, action = {}) {
     /* Function to handle loading page or activities */
-    return ({...state, ...{saveSuccessful: false, actionSuccessful: false, action: action,
-        isLoaded: true, isReloaded: true, isFormLoaded: false}});
+    return ({...state, ...{saveSuccessful: false, actionSuccessful: false, saveFailed: false, action: action,
+        isLoaded: true, isReloaded: true, isFormLoaded: false, uploadSuccessful: false}});
+}
+
+export function showUploadLoading(state, action = {}) {
+    /* Function to handle loading page or activities */
+    return ({...state, ...{saveSuccessful: false, actionSuccessful: false, saveFailed: false, action: action,
+        isLoaded: true, isReloaded: true, isFormLoaded: true, isUploadCompleted: false, uploadSuccessful: false}});
 }
 
 export function listSuccessful(state, action) {
@@ -67,9 +76,11 @@ export function formSuccessful(state, action) {
     let data = {
         data: payload.data,
         dependencies: payload.dependencies,
+        errors: {},
     };
 
-    return ({...state, ...data, ...{isLoaded: true, isReloaded: true, isFormLoaded: true, saveSuccessful: false, actionSuccessful: false}});
+    return ({...state, ...data, ...{isLoaded: true, isReloaded: true, isFormLoaded: true,
+         isUploadCompleted: false, saveSuccessful: false, actionSuccessful: false}, uploadSuccessful: false});
 }
 
 export function saveSuccessful(state, action) {
@@ -79,7 +90,8 @@ export function saveSuccessful(state, action) {
         data: payload,
     };
 
-    return ({...state, ...data, ...{isLoaded: true, isReloaded: true, isFormLoaded: true, saveSuccessful: true, actionSuccessful: false}});
+    return ({...state, ...data, ...{isLoaded: true, isReloaded: true, isFormLoaded: true, saveFailed: false,
+         isUploadCompleted: false, uploadSuccessful: false, saveSuccessful: true, actionSuccessful: false}});
 }
 
 export function saveFailed(state, action) {
@@ -89,7 +101,7 @@ export function saveFailed(state, action) {
         errors: payload,
     };
 
-    return ({...state, ...data, ...{isLoaded: true, isReloaded: true, isFormLoaded: true, saveSuccessful: false, actionSuccessful: false}});
+    return ({...state, ...data, ...{isLoaded: true, isReloaded: true, isFormLoaded: true, isUploadCompleted: false, saveSuccessful: false, saveFailed: true, uploadSuccessful: false, actionSuccessful: false}});
 }
 
 export function deleteSuccessful(state, action) {
@@ -99,7 +111,7 @@ export function deleteSuccessful(state, action) {
         data: payload,
     };
 
-    return ({...state, ...data, ...{isLoaded: true, isReloaded: true, isFormLoaded: true, saveSuccessful: true, actionSuccessful: false}});
+    return ({...state, ...data, ...{isLoaded: true, isReloaded: true, isFormLoaded: true, saveSuccessful: true, uploadSuccessful: false, actionSuccessful: false, isUploadCompleted: false, saveFailed: false}});
 }
 
 export function deleteFailed(state, action) {
@@ -130,4 +142,24 @@ export function doActionSuccessful(state, action) {
     };
 
     return ({...state, ...data, ...{isLoaded: true, isReloaded: true, isFormLoaded: true, saveSuccessful: true, actionSuccessful: true}});
+}
+
+export function uploadFailed(state, action) {
+
+    let payload = action.payload;
+    let data = {
+        errors: payload,
+    };
+
+    return ({...state, ...data, ...{isLoaded: true, isReloaded: true, isFormLoaded: true, saveSuccessful: false, isUploadCompleted: true, uploadSuccessful: false, saveFailed: false, actionSuccessful: false}});
+}
+
+export function uploadSuccessful(state, action) {
+
+    let payload = action.payload;
+    let data = {
+        data: payload,
+    };
+
+    return ({...state, ...data, ...{isLoaded: true, isReloaded: true, isFormLoaded: true, saveSuccessful: true, isUploadCompleted: true, uploadSuccessful: true, saveFailed: false, actionSuccessful: true}});
 }

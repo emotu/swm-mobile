@@ -1,7 +1,7 @@
 // import Api from 'utils/api';
 import axios from 'axios';
 import { generateActionTypes, generateAction } from 'app/utils/generators';
-import { Task, PropertyStatus, PropertyType, VerificationStatus, Street, RegisterProperty } from 'app/services/models';
+import { QueuedTask as Task, PropertyStatus, PropertyType, VerificationStatus, Street, RegisterProperty, Property } from 'app/services/models';
 import * as Auth from 'app/utils/auth';
 
 export const ActionTypes = generateActionTypes(
@@ -12,6 +12,7 @@ export const ActionTypes = generateActionTypes(
         'FORM',
         'DETAIL',
         'SAVE',
+        'UPLOAD',
     ]
 );
 
@@ -110,5 +111,23 @@ export function form(data = {}) {
             dispatch(generateAction(ActionTypes.TASK_FORM_FAILED, error.response.data));
         })
 
+    };
+}
+
+export function upload(data = {}, file) {
+    return function(dispatch) {
+        if(data.reloading) {
+            dispatch(generateAction(ActionTypes.TASK_RELOADING, {}));
+        } else {
+            dispatch(generateAction(ActionTypes.TASK_LOADING, {}));
+        }
+        data.path = 'upload_image';
+
+        return Property.uploadFile(data, file).then(response => {
+            dispatch(generateAction(ActionTypes.TASK_UPLOAD_SUCCESSFUL, response.data));
+
+        }).catch(error => {
+            dispatch(generateAction(ActionTypes.TASK_UPLOAD_FAILED, error.response.data));
+        });
     };
 }

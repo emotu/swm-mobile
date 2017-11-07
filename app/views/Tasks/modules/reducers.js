@@ -13,4 +13,6 @@ export default generateReducer(Reducers.defaultState, {
     [ActionTypes.TASK_SAVE_FAILED]: Reducers.saveFailed,
     [ActionTypes.TASK_FORM_SUCCESSFUL]: Reducers.formSuccessful,
     [ActionTypes.TASK_FORM_FAILED]: Reducers.formFailed,
+    [ActionTypes.TASK_UPLOAD_SUCCESSFUL]: Reducers.uploadSuccessful,
+    [ActionTypes.TASK_UPLOAD_FAILED]: Reducers.uploadSuccessful,
 });

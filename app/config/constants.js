@@ -7,7 +7,7 @@ const data = {
     whiteColor: '#ffffff',
     blackColor: '#0a0a0a',
     greyColor: '#e8e8e8',
-    lightColor: '#d2d2d2',
+    lightColor: '#b2b2b2',
     shadeColor: '#696969',
     darkColor: '#0a0a0a',
     gridTextColor: '#2d2f35',
@@ -19,15 +19,16 @@ const data = {
     listTitleFontSize: Platform.OS == 'ios' ? 6 : 8,
     listDetailFontSize: Platform.OS == 'ios' ? 9 : 10,
     labelFontSize: 6,
-    loadingTextFontSize: Platform.OS === 'ios' ? PixelRatio.getPixelSizeForLayoutSize(6) : PixelRatio.getPixelSizeForLayoutSize(8),
-    tabBarFontSize: Platform.OS === 'ios' ? PixelRatio.getPixelSizeForLayoutSize(7) : PixelRatio.getPixelSizeForLayoutSize(9),
+    loadingTextFontSize: Platform.OS === 'ios' ? PixelRatio.getPixelSizeForLayoutSize(6) : PixelRatio.getPixelSizeForLayoutSize(7),
+    tabBarFontSize: Platform.OS === 'ios' ? PixelRatio.getPixelSizeForLayoutSize(6) : PixelRatio.getPixelSizeForLayoutSize(7),
 
     // Fonts
-    // fontFamily: Platform.OS === 'ios' ? 'System' : 'lato',
-    // headerFontFamily: Platform.OS === 'ios' ? 'System' : 'lato',
-    fontFamily: 'lato',
-    headerFontFamily: 'lato',
-    textFontFamily: 'lato',
+    fontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    headerFontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    textFontFamily: Platform.OS === 'ios' ? 'System' : 'Roboto',
+    // fontFamily: 'lato',
+    // headerFontFamily: 'lato',
+    // textFontFamily: 'lato',
 };
 
 export default data;
