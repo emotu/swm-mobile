@@ -13,10 +13,11 @@ import {
     RefreshControl,
     Modal,
     Picker,
+    FlatList,
 
 } from 'react-native';
 
-
+import { NavigationActions } from 'react-navigation';
 import * as PageActions from './modules/actions';
 import { connect } from 'react-redux';
 import styles from './styles';
@@ -33,6 +34,43 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import Capture from 'app/components/Capture';
 import MenuList from 'app/components/MenuList';
+import PropertyList from './properties';
+
+
+
+class TaskItem extends React.PureComponent {
+    _onPress = () => {
+        this.props.onPressItem(this.props.obj);
+    }
+
+    render() {
+        let props = this.props;
+        let obj = props.obj;
+
+        let iconSize = PixelRatio.getPixelSizeForLayoutSize(constants.menuIconSize-4);
+        let basicColor = constants.lightColor;
+
+        return (
+            <TouchableOpacity style={styles.taskList} onPress={this._onPress}>
+                <View style={styles.taskEntryGroup}>
+                    <Text style={styles.taskEntryTitle}>{obj.code}</Text>
+                    <Text style={styles.taskEntryContent} numberOfLines={1}>{obj.name.toLowerCase()}</Text>
+                    <Text style={[styles.taskEntryTitle, {fontSize: PixelRatio.getPixelSizeForLayoutSize(10)}]} numberOfLines={2}>
+                        {obj.full_street || ""}
+                    </Text>
+                    <Text style={[styles.taskEntryTitle]}>{obj.verification_status.name}</Text>
+                </View>
+                <View style={{alignItems: 'flex-end'}}>
+                    <Feather name="info" size={iconSize} color={basicColor} />
+                </View>
+            </TouchableOpacity>
+        )
+    }
+}
+
+const ItemSeparator = () => (
+    <View style={generalStyles.listSeparator}></View>
+)
 
 
 class Page extends Component {
@@ -48,6 +86,7 @@ class Page extends Component {
             barcodeModal: false,
             propertyTypeModal: false,
             propertyStatusModal: false,
+            searchModal: false,
         }
 
         this.saveData = this.saveData.bind(this);
@@ -58,11 +97,21 @@ class Page extends Component {
         this.openModal = this.openModal.bind(this);
         this.handleCapturedImage = this.handleCapturedImage.bind(this);
         this.handleCapturedBarcode = this.handleCapturedBarcode.bind(this);
-        this.restartForm = this.restartForm.bind(this);
+        this.submitProperty = this.submitProperty.bind(this);
+        this.updateProperty = this.updateProperty.bind(this);
+        this.renderItem = this.renderItem.bind(this);
     }
 
     closeAllModal() {
-        this.setState( { imageModal: false, barcodeModal: false, propertyTypeModal: false, propertyStatusModal: false});
+        this.setState( { imageModal: false, barcodeModal: false, propertyTypeModal: false,
+            propertyStatusModal: false, searchModal: false});
+    }
+
+    renderItem({ item }) {
+        return (
+            <TaskItem obj={item} onPressItem={this.updateProperty} />
+        )
+
     }
 
     closeModal(name) {
@@ -70,6 +119,7 @@ class Page extends Component {
     }
 
     openModal(name) {
+        console.log('opening modal for...', name);
         this.setState({ [name]: true });
     }
 
@@ -88,6 +138,42 @@ class Page extends Component {
         let data = this.state.data || {};
         let propsData = this.props.data;
         this.props.saveAction(data);
+    }
+
+
+    submitProperty() {
+        const navigation = this.props.navigation;
+        let props = this.props;
+        if(props.obj && props.obj.pk) {
+
+            const pageAction = NavigationActions.navigate({
+                routeName: 'TaskForm',
+                params: {
+                    task_id: props.obj.pk,
+                    street_id: props.obj.street_id,
+                },
+            })
+
+            navigation.dispatch(pageAction);
+        }
+    }
+
+    updateProperty(obj) {
+        const navigation = this.props.navigation;
+        let props = this.props;
+        let params = navigation.state.params || {};
+        params.id = obj.pk;
+        params.name = obj.code;
+
+        console.log('this is the params now', params);
+
+        const pageAction = NavigationActions.navigate({
+            routeName: 'PropertyForm',
+            params: params,
+        })
+
+        navigation.dispatch(pageAction);
+        this.closeAllModal();
     }
 
     handleErrors(errors, name){
@@ -124,8 +210,8 @@ class Page extends Component {
         })
     }
 
-    restartForm() {
-        console.log('this is the point where we restart the form by navigating into it again..');
+    showSearchModal() {
+        console.log("I am now ready to show person you and others");
 
     }
 
@@ -157,7 +243,6 @@ class Page extends Component {
     }
 
     handleCapturedImage(data, location) {
-        console.log('capturing data now ======> ', data, location)
         this.state.images.push(data);
 
         this.closeAllModal();
@@ -165,13 +250,11 @@ class Page extends Component {
     }
 
     handleCapturedBarcode(barcode, location) {
-        console.log('capturing data now ======> ', barcode, location)
         this.handleInputChanged('tag_code', barcode.data)
         this.closeAllModal();
     }
 
     handleItemSelected(key, item) {
-        console.log('handling item selected for the following', key, item);
         this.closeAllModal();
         this.handleInputChanged(key, item.pk);
     }
@@ -179,7 +262,7 @@ class Page extends Component {
     render() {
 
         let props = this.props;
-        let successCheckboxSize = PixelRatio.getPixelSizeForLayoutSize(constants.menuIconSize*10);
+        let successCheckboxSize = PixelRatio.getPixelSizeForLayoutSize(constants.menuIconSize*8);
         let navigation = props.navigation;
 
         if(!props.isLoaded || !props.dependencies || !props.dependencies.task) {
@@ -191,26 +274,52 @@ class Page extends Component {
             )
         }
 
-        if(props.saveSuccessful && !props.uploadSuccessful) {
-            return (
-                <View style={generalStyles.loadingContainer}>
-                    <ActivityIndicator animating={true} size={'large'} color={constants.baseColor} />
-                    <Text style={generalStyles.loadingText}>UPLOADING IMAGES</Text>
-                </View>
-            )
-        }
-
-        if(props.saveSuccessful && props.uploadSuccessful) {
+        if(props.saveSuccessful && props.data && props.data.total == 0) {
+            let data = props.data;
             return (
                 <View style={[generalStyles.loadingContainer, {paddingHorizontal: 10, paddingVertical: 10}]}>
-                    <Feather name="check" size={successCheckboxSize} color={constants.baseColor} />
-                    <TouchableOpacity style={[styles.actionButtonArea, {marginTop: 4}]} onPress={() => { navigation.goBack(2); }}>
-                        <Text style={styles.actionButton}>{"SUBMIT ANOTHER ENTRY"}</Text>
-                    </TouchableOpacity>
+                    <Text style={styles.notFound}>{"PROPERTY NOT FOUND"}</Text>
+                    <Feather name="info" size={successCheckboxSize} color={constants.baseColor} />
+                    <View style={{paddingHorizontal: 20}}>
+                        <TouchableOpacity style={[styles.actionButtonArea, {marginTop: 25}]} onPress={this.submitProperty}>
+                            <Text style={styles.actionButton}>{"PROCEED WITH REGISTRATION"}</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             )
-
         }
+
+
+        if(props.saveSuccessful && props.data && props.data.total > 0) {
+            let data = props.data;
+            return (
+                <View style={[generalStyles.container, {paddingHorizontal: 10, paddingVertical: 30}]}>
+                    <Text style={styles.notFound}>{`${data.total} RESULT(S) FOUND`}</Text>
+                    {/* <Feather name="info" size={successCheckboxSize} color={constants.baseColor} /> */}
+                    <View style={styles.searchResults}>
+                        <FlatList style={generalStyles.listContainer} ItemSeparatorComponent={ItemSeparator}
+                            data={data.results || []} renderItem={this.renderItem} keyExtractor={(item) => item.pk || item.id} />
+                    </View>
+                </View>
+            )
+        }
+
+
+
+
+        // if(props.saveSuccessful && props.uploadSuccessful) {
+        //     return (
+        //         <View style={[generalStyles.loadingContainer, {paddingHorizontal: 10, paddingVertical: 10}]}>
+        //             <Feather name="check" size={successCheckboxSize} color={constants.baseColor} />
+        //             <View style={{paddingHorizontal: 20}}>
+        //                 <TouchableOpacity style={[styles.actionButtonArea, {marginTop: 4}]} onPress={() => { navigation.goBack(); }}>
+        //                     <Text style={styles.actionButton}>{"SUBMIT ANOTHER ENTRY"}</Text>
+        //                 </TouchableOpacity>
+        //             </View>
+        //         </View>
+        //     )
+        //
+        // }
 
         let refreshControl = <RefreshControl refreshing={!props.isReloaded} onRefresh={() => { this.loadData(true); } } />
 
@@ -251,14 +360,13 @@ class Page extends Component {
             <View style={generalStyles.container}>
                 <ScrollView style={styles.detailContainer}>
                     <View style={generalStyles.spacer}></View>
-                    <Text style={generalStyles.dataFormSectionTitle}>{"CONTACT PERSON"}</Text>
+                    {/* <Text style={generalStyles.dataFormSectionTitle}>{"CONTACT PERSON"}</Text>
                     <View style={generalStyles.dataFormSectionGroup}>
                         <View style={generalStyles.dataIconSection}>
                             <MaterialIcons name="perm-identity" size={plusIconSize} color={plusColor} />
                         </View>
                         <View style={generalStyles.dataInputSection}>
                             <View style={generalStyles.dataFormSection}>
-                                {/* <Text style={generalStyles.dataFormLabel}>{"first name".toUpperCase()}</Text> */}
                                 <TextInput autoFocus={false} autoCapitalize={'sentences'} autoCorrect={false} value={data.name}
                                      placeholderTextColor={constants.dataInputPlaceholderTextColor} selectionColor={constants.baseColor}
                                      style={[generalStyles.dataInputField, hasErrors(props.errors, 'name') && generalStyles.errorInput]}
@@ -270,7 +378,6 @@ class Page extends Component {
                             </View>
 
                             <View style={generalStyles.dataFormSection}>
-                                {/* <Text style={generalStyles.dataFormLabel}>{"last name".toUpperCase()}</Text> */}
                                 <TextInput autoFocus={false} autoCapitalize={'none'} autoCorrect={false} value={data.email}
                                      placeholderTextColor={constants.dataInputPlaceholderTextColor} selectionColor={constants.baseColor}
                                      style={[generalStyles.dataInputField, hasErrors(props.errors, 'email') && generalStyles.errorInput]}
@@ -281,7 +388,6 @@ class Page extends Component {
                                      {this.handleErrors(props.errors, 'email')}
                             </View>
                             <View style={generalStyles.dataFormSection}>
-                                {/* <Text style={generalStyles.dataFormLabel}>{"last name".toUpperCase()}</Text> */}
                                 <TextInput autoFocus={false} autoCapitalize={'none'} autoCorrect={false} value={data.phone}
                                      placeholderTextColor={constants.dataInputPlaceholderTextColor} selectionColor={constants.baseColor}
                                      style={[generalStyles.dataInputField, hasErrors(props.errors, 'phone') && generalStyles.errorInput]}
@@ -292,12 +398,12 @@ class Page extends Component {
                                      {this.handleErrors(props.errors, 'phone')}
                             </View>
                         </View>
-                    </View>
+                    </View> */}
 
-                    <Text style={generalStyles.dataFormSectionTitle}>{"LOCATION & DESCRIPTION"}</Text>
+                    <Text style={generalStyles.dataFormSectionTitle}>{"SEARCH AND VERIFY PROPERTY"}</Text>
                     <View style={generalStyles.dataFormSectionGroup}>
                         <View style={generalStyles.dataIconSection}>
-                            <MaterialIcons name="home" size={plusIconSize} color={plusColor} />
+                            {/* <MaterialIcons name="home" size={plusIconSize} color={plusColor} /> */}
                         </View>
                         <View style={[generalStyles.dataInputSection]}>
                             <View style={generalStyles.dataFormSection}>
@@ -324,19 +430,19 @@ class Page extends Component {
                                          keyboardType={'default'}
                                          underlineColorAndroid={'transparent'}
                                          onChangeText={(value) => this.handleInputChanged('apt', value)}/>
-                                     <TextInput autoFocus={false} autoCapitalize={'words'} autoCorrect={false} value={data.property_size}
+                                     {/* <TextInput autoFocus={false} autoCapitalize={'words'} autoCorrect={false} value={data.property_size}
                                           placeholderTextColor={constants.dataInputPlaceholderTextColor} selectionColor={constants.baseColor}
-                                          style={[generalStyles.dataInputField, {textAlign: 'left'}, hasErrors(props.errors, 'property_size') && generalStyles.errorInput]}
-                                          placeholder={'Size (SQM)'} returnKeyType={'next'}
+                                          style={[generalStyles.dataInputField, {textAlign: 'right'}, hasErrors(props.errors, 'property_size') && generalStyles.errorInput]}
+                                          placeholder={'Size'} returnKeyType={'next'}
                                           keyboardType={'numeric'}
                                           underlineColorAndroid={'transparent'}
-                                          onChangeText={(value) => this.handleInputChanged('property_size', value)}/>
+                                          onChangeText={(value) => this.handleInputChanged('property_size', value)}/> */}
                                 </View>
                                 {this.handleErrors(props.errors, 'apt')}
                                 {this.handleErrors(props.errors, 'house_number')}
                                 {this.handleErrors(props.errors, 'property_size')}
                             </View>
-                            <View style={generalStyles.dataFormSection}>
+                            {/* <View style={generalStyles.dataFormSection}>
                                 <TouchableOpacity style={generalStyles.dropDownGroup} onPress={() => this.openModal('propertyTypeModal')}>
                                     <Text style={[generalStyles.dropDownLabel, property_type && selectedStyle]}>{property_type_text}</Text>
                                     <Entypo name="chevron-small-down" size={iconSize} color={basicColor} />
@@ -350,15 +456,12 @@ class Page extends Component {
                                     <Entypo name="chevron-small-down" size={iconSize} color={basicColor} />
                                 </TouchableOpacity>
                                 {this.handleErrors(props.errors, 'property_status_code')}
-                            </View>
+                            </View> */}
                         </View>
                     </View>
 
-                    <Text style={generalStyles.dataFormSectionTitle}>{"IMAGES & TAG"}</Text>
+                    {/* <Text style={generalStyles.dataFormSectionTitle}>{"IMAGES & TAG"}</Text>
                     <View style={generalStyles.dataFormSectionGroup}>
-                        {/* <View style={generalStyles.dataIconSection}>
-                            <Entypo name="home" size={plusIconSize} color={plusColor} />
-                        </View> */}
                         <View style={[generalStyles.dataInputSection, cutomSectionStyle]}>
                             <View style={generalStyles.dataFormSection}>
                                 <TouchableOpacity style={generalStyles.dropDownGroup} onPress={() => this.openModal('imageModal')}>
@@ -375,15 +478,15 @@ class Page extends Component {
                                 {this.handleErrors(props.errors, 'tag_code')}
                             </View>
                         </View>
-                    </View>
+                    </View> */}
 
                 </ScrollView>
                 <TouchableOpacity style={styles.actionButtonArea} onPress={this.saveData}>
-                    <Text style={styles.actionButton}>{"SAVE"}</Text>
+                    <Text style={styles.actionButton}>{"SEARCH AND VERIFY"}</Text>
                     {/* <Feather name="arrow-right" size={plusIconSize} color={plusColor} /> */}
                 </TouchableOpacity>
 
-                <Modal transparent={true} animationType={"slide"} hardwareAccelerated={true} onRequestClose={() => {}}
+                {/* <Modal transparent={true} animationType={"slide"} hardwareAccelerated={true} onRequestClose={() => {}}
                     visible={this.state.imageModal}>
                     <Capture type={"image"} title={"TAKE A PHOTO"} onCapture={this.handleCapturedImage}
                         onCancel={() => { this.closeModal('imageModal'); }} />
@@ -407,6 +510,12 @@ class Page extends Component {
                     <MenuList value={data.property_status_code} title={"SELECT STATUS"} options={props.dependencies.property_statuses}
                         onItemSelected={(item) => { this.handleItemSelected('property_status_code', item); }}
                     onCancel={() => { this.closeModal('propertyStatusModal'); }} />
+                </Modal> */}
+
+                <Modal transparent={true} animationType={"slide"} hardwareAccelerated={true} onRequestClose={() => {}}
+                    visible={this.state.searchModal}>
+                    <PropertyList title={"SELECT PROPERTY TO UPDATE"} options={props.data.results || []}
+                        onItemSelected={this.submitProperty} onCancel={() => { this.closeModal('searchModal'); }} />
                 </Modal>
 
             </View>
@@ -421,7 +530,7 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = {
     formAction: PageActions.form,
-    saveAction: PageActions.save,
+    saveAction: PageActions.verify,
     uploadAction: PageActions.upload,
 };
 

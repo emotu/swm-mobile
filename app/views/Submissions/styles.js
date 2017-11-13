@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     },
 
     actionButtonArea: {
-        width: width,
+        width: '100%',
         flexDirection: 'row',
         padding: PixelRatio.getPixelSizeForLayoutSize(9),
         backgroundColor: constants.baseColor,
@@ -110,6 +110,7 @@ const styles = StyleSheet.create({
         // letterSpacing: -1,
     },
     taskEntryContent: {
+        fontWeight: 'bold',
         fontSize: PixelRatio.getPixelSizeForLayoutSize(constants.listDetailFontSize-1),
         color: constants.blackColor,
         fontFamily: constants.fontFamily,

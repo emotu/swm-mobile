@@ -80,8 +80,20 @@ const styles = StyleSheet.create({
         flex: 1,
     },
 
+    notFound: {
+        color: "#020202",
+        fontWeight: "bold",
+        marginBottom: PixelRatio.getPixelSizeForLayoutSize(10),
+    },
+
+    searchResults: {
+        width: '100%',
+        flex: 1,
+        height: '100%',
+    },
+
     actionButtonArea: {
-        width: width,
+        width: '100%',
         flexDirection: 'row',
         padding: PixelRatio.getPixelSizeForLayoutSize(9),
         backgroundColor: constants.baseColor,

@@ -40,6 +40,7 @@ class Page extends Component {
 
         this.loadData = this.loadData.bind(this);
         this.submitProperty = this.submitProperty.bind(this);
+        this.verifyProperty = this.verifyProperty.bind(this);
     }
 
     loadData(reloading = false) {
@@ -62,6 +63,23 @@ class Page extends Component {
 
             const pageAction = NavigationActions.navigate({
                 routeName: 'TaskForm',
+                params: {
+                    task_id: props.obj.pk,
+                    street_id: props.obj.street_id,
+                },
+            })
+
+            navigation.dispatch(pageAction);
+        }
+    }
+
+    verifyProperty() {
+        const navigation = this.props.navigation;
+        let props = this.props;
+        if(props.obj && props.obj.pk) {
+
+            const pageAction = NavigationActions.navigate({
+                routeName: 'VerifyForm',
                 params: {
                     task_id: props.obj.pk,
                     street_id: props.obj.street_id,
@@ -127,7 +145,7 @@ class Page extends Component {
                     <Text style={styles.commentaryBox}>To submit a property under this task, click on the action button below</Text>
                     <Text style={styles.commentaryBox}><Feather name="arrow-down" size={plusIconSize} color={basicColor} /></Text>
                 </ScrollView>
-                <TouchableOpacity style={styles.actionButtonArea} onPress={this.submitProperty}>
+                <TouchableOpacity style={styles.actionButtonArea} onPress={this.verifyProperty}>
                     <Text style={styles.actionButton}>{"SUBMIT NEW PROPERTY"}</Text>
                     <Feather name="arrow-right" size={plusIconSize} color={plusColor} />
                 </TouchableOpacity>

@@ -42,3 +42,4 @@ export class PropertyType extends ResourceFactory.createResource('property-types
 export class PropertyStatus extends ResourceFactory.createResource('property-statuses') {}
 
 export class RegisterProperty extends ResourceFactory.createResource('register-property') {}
+export class SearchProperty extends ResourceFactory.createResource('search-property') {}

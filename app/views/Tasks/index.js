@@ -44,7 +44,7 @@ class TaskItem extends React.PureComponent {
             <TouchableOpacity style={styles.taskList} onPress={this._onPress}>
                 <View style={styles.taskEntryGroup}>
                     <Text style={styles.taskEntryTitle}>{city.name}</Text>
-                    <Text style={styles.taskEntryContent} numberOfLines={1}>{street.name.toUpperCase()}</Text>
+                    <Text style={styles.taskEntryContent} numberOfLines={1}>{street.name}</Text>
                 </View>
                 <Entypo name="chevron-small-right" size={iconSize} color={basicColor} />
             </TouchableOpacity>
@@ -98,8 +98,7 @@ class Page extends Component {
                 </TouchableOpacity>
             ),
             headerRight: (
-                <TouchableOpacity style={generalStyles.navigationButton} onPress={() => {
-                    console.log('I just got pressed'); console.log(PageActions); store.dispatch(PageActions.list({})) }}>
+                <TouchableOpacity style={generalStyles.navigationButton} onPress={() => { store.dispatch(PageActions.list({})) }}>
                     <Feather name="refresh-cw" size={iconSize} color={basicColor} />
                 </TouchableOpacity>
             ),
@@ -196,5 +195,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(Page);
 
 import Detail from './detail';
 import Form from './form';
+import Verify from './verify';
 
-export { Detail, Form }
+export { Detail, Form, Verify }

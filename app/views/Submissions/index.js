@@ -41,8 +41,10 @@ class TaskItem extends React.PureComponent {
             <TouchableOpacity style={styles.taskList} onPress={this._onPress}>
                 <View style={styles.taskEntryGroup}>
                     <Text style={styles.taskEntryTitle}>{obj.code}</Text>
-                    <Text style={styles.taskEntryContent} numberOfLines={1}>{obj.name.toUpperCase()}</Text>
-                    <Text style={[styles.taskEntryTitle, {fontSize: PixelRatio.getPixelSizeForLayoutSize(11)}]} numberOfLines={1}>{obj.street ? obj.street.name : ""}</Text>
+                    <Text style={styles.taskEntryContent} numberOfLines={1}>{obj.name.toLowerCase()}</Text>
+                    <Text style={[styles.taskEntryTitle, {fontSize: PixelRatio.getPixelSizeForLayoutSize(10)}]} numberOfLines={2}>
+                        {obj.full_street || ""}
+                    </Text>
                 </View>
                 <View>
                     <Text style={[styles.taskEntryTitle, {textAlign: 'right'}]}>{obj.verification_status.name}</Text>

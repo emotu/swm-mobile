@@ -184,7 +184,7 @@ class Page extends Component {
             )
         }
 
-        if(props.saveSuccessful && !props.uploadSuccessful) {
+        if(props.saveSuccessful && !props.uploadSuccessful && this.state.images && this.state.images.length > 0) {
             return (
                 <View style={generalStyles.loadingContainer}>
                     <ActivityIndicator animating={true} size={'large'} color={constants.baseColor} />
@@ -193,13 +193,15 @@ class Page extends Component {
             )
         }
 
-        if(props.saveSuccessful && props.uploadSuccessful) {
+        if(props.saveSuccessful) {
             return (
                 <View style={[generalStyles.loadingContainer, {paddingHorizontal: 10, paddingVertical: 10}]}>
                     <Feather name="check" size={successCheckboxSize} color={constants.baseColor} />
-                    <TouchableOpacity style={[styles.actionButtonArea, {marginTop: 4}]} onPress={this.restartForm}>
-                        <Text style={styles.actionButton}>{"SUBMIT ANOTHER ENTRY"}</Text>
-                    </TouchableOpacity>
+                    {/* <View style={{paddingHorizontal: 20}}>
+                        <TouchableOpacity style={[styles.actionButtonArea, {marginTop: 4}]} onPress={this.restartForm}>
+                            <Text style={styles.actionButton}>{"SUBMIT ANOTHER ENTRY"}</Text>
+                        </TouchableOpacity>
+                    </View> */}
                 </View>
             )
 
@@ -304,13 +306,13 @@ class Page extends Component {
                             <View style={generalStyles.dataFormSection}>
                                 {/* <Text style={generalStyles.dataFormLabel}>{"middle name".toUpperCase()}</Text> */}
                                 <View style={generalStyles.inlineInputBox}>
-                                    <TextInput autoFocus={false} autoCapitalize={'words'} autoCorrect={false} value={data.plot}
+                                    <TextInput autoFocus={false} autoCapitalize={'words'} autoCorrect={false} value={data.house_number}
                                          placeholderTextColor={constants.dataInputPlaceholderTextColor} selectionColor={constants.baseColor}
-                                         style={[generalStyles.dataInputField, hasErrors(props.errors, 'plot') && generalStyles.errorInput]}
-                                         placeholder={'Plot'} returnKeyType={'next'}
+                                         style={[generalStyles.dataInputField, hasErrors(props.errors, 'house_number') && generalStyles.errorInput]}
+                                         placeholder={'House No.'} returnKeyType={'next'}
                                          keyboardType={'default'}
                                          underlineColorAndroid={'transparent'}
-                                         onChangeText={(value) => this.handleInputChanged('plot', value)}/>
+                                         onChangeText={(value) => this.handleInputChanged('house_number', value)}/>
                                     <TextInput autoFocus={false} autoCapitalize={'words'} autoCorrect={false} value={data.apt}
                                          placeholderTextColor={constants.dataInputPlaceholderTextColor} selectionColor={constants.baseColor}
                                          style={[generalStyles.dataInputField, hasErrors(props.errors, 'apt') && generalStyles.errorInput]}
@@ -320,14 +322,14 @@ class Page extends Component {
                                          onChangeText={(value) => this.handleInputChanged('apt', value)}/>
                                      <TextInput autoFocus={false} autoCapitalize={'words'} autoCorrect={false} value={data.property_size ? data.property_size.toString() : ""}
                                           placeholderTextColor={constants.dataInputPlaceholderTextColor} selectionColor={constants.baseColor}
-                                          style={[generalStyles.dataInputField, {textAlign: 'right'}, hasErrors(props.errors, 'property_size') && generalStyles.errorInput]}
+                                          style={[generalStyles.dataInputField, hasErrors(props.errors, 'property_size') && generalStyles.errorInput]}
                                           placeholder={'Size'} returnKeyType={'next'}
                                           keyboardType={'numeric'}
                                           underlineColorAndroid={'transparent'}
                                           onChangeText={(value) => this.handleInputChanged('property_size', value)}/>
                                 </View>
                                 {this.handleErrors(props.errors, 'apt')}
-                                {this.handleErrors(props.errors, 'plot')}
+                                {this.handleErrors(props.errors, 'house_number')}
                                 {this.handleErrors(props.errors, 'property_size')}
                             </View>
                             <View style={generalStyles.dataFormSection}>

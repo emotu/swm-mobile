@@ -13,7 +13,7 @@ import {
 import { StackNavigator, TabNavigator, TabBarTop } from 'react-navigation';
 
 import Home from 'app/views/Home';
-import Tasks, { Detail as TaskDetail, Form as TaskForm, } from 'app/views/Tasks';
+import Tasks, { Detail as TaskDetail, Form as TaskForm, Verify as VerifyForm } from 'app/views/Tasks';
 import Submissions, { Detail as PropertyDetail, Form as PropertyForm } from 'app/views/Submissions';
 
 import styles from './styles';
@@ -87,6 +87,42 @@ const RootNavigator = StackNavigator({
                     <TouchableOpacity style={generalStyles.navigationButton}
                         onPress={() => { navigation.goBack(); }}>
                         <Feather name="arrow-left" size={iconSize} color={basicColor} />
+                    </TouchableOpacity>
+                ),
+                headerStyle: {
+                    backgroundColor: constants.baseColor,
+                    borderBottomColor: constants.baseColor,
+                    elevation: 2,
+                    borderBottomWidth: 0.5,
+                },
+                titleStyle: {
+                    textAlign: 'center',
+                    alignSelf: 'center',
+                    color: constants.whiteColor,
+                }
+            }
+        }
+    },
+    VerifyForm: {
+        screen: VerifyForm,
+        navigationOptions: ({ navigation }) => {
+            const iconSize = PixelRatio.getPixelSizeForLayoutSize(constants.menuIconSize);
+            const basicColor = constants.whiteColor;
+            const params = navigation.state.params || {};
+            const name = params.name || "..."
+
+            return {
+                title: (<Text style={generalStyles.mainHeadline}>{"VERIFY PROPERTY"}</Text>),
+                headerLeft: (
+                    <TouchableOpacity style={generalStyles.navigationButton}
+                        onPress={() => { navigation.goBack(); }}>
+                        <Feather name="arrow-left" size={iconSize} color={basicColor} />
+                    </TouchableOpacity>
+                ),
+                headerRight: (
+                    <TouchableOpacity style={generalStyles.navigationButton}
+                        onPress={() => { navigation.goBack(); }}>
+                        <Feather name="x" size={iconSize} color={basicColor} />
                     </TouchableOpacity>
                 ),
                 headerStyle: {

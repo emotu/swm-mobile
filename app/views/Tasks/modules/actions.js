@@ -1,7 +1,7 @@
 // import Api from 'utils/api';
 import axios from 'axios';
 import { generateActionTypes, generateAction } from 'app/utils/generators';
-import { QueuedTask as Task, PropertyStatus, PropertyType, VerificationStatus, Street, RegisterProperty, Property } from 'app/services/models';
+import { QueuedTask as Task, PropertyStatus, PropertyType, VerificationStatus, Street, RegisterProperty, SearchProperty, Property } from 'app/services/models';
 import * as Auth from 'app/utils/auth';
 
 export const ActionTypes = generateActionTypes(
@@ -63,6 +63,23 @@ export function save(data = {}) {
         }
 
         return RegisterProperty.save(data).then(response => {
+            dispatch(generateAction(ActionTypes.TASK_SAVE_SUCCESSFUL, response.data));
+        }).catch(error => {
+            console.log(error)
+            dispatch(generateAction(ActionTypes.TASK_SAVE_FAILED, error.response.data));
+        });
+    };
+}
+
+export function verify(data = {}) {
+    return function(dispatch) {
+        if(data.reloading) {
+            dispatch(generateAction(ActionTypes.TASK_RELOADING, {}));
+        } else {
+            dispatch(generateAction(ActionTypes.TASK_LOADING, {}));
+        }
+
+        return SearchProperty.save(data).then(response => {
             dispatch(generateAction(ActionTypes.TASK_SAVE_SUCCESSFUL, response.data));
         }).catch(error => {
             console.log(error)
