@@ -103,7 +103,7 @@ export function form(data = {}) {
 
             Task.get({ id: task_id}),
 
-            Street.get({ id: task_id}),
+            Street.get({ id: street_id}),
 
             PropertyStatus.list({from_cache: true, page_by: JSON.stringify({ per_page: 1000 }),
                 sort_by: JSON.stringify({ asc_desc:'desc', order_by: 'name' }), }),
