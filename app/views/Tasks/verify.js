@@ -164,6 +164,8 @@ class Page extends Component {
         let params = navigation.state.params || {};
         params.id = obj.pk;
         params.name = obj.code;
+        params.task_id = props.obj.id
+        params.street_id = props.obj.street_id
 
         console.log('this is the params now', params);
 
